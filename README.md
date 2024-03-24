@@ -2,7 +2,7 @@
 
 **⚠️ Work in progress, not published yet ⚠️**
 
-Universal, lightweight rate limit library for Node.js, Cloudflare Workers, browsers, and more.
+Universal, lightweight rate limit library for Node.js, Cloudflare Workers, and more.
 
 ## Why?
 
