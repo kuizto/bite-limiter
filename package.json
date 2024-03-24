@@ -1,0 +1,44 @@
+{
+  "name": "@kuizto/bite-limiter",
+  "author": "kuizto.co",
+  "license": "MIT",
+  "version": "0.0.1-preview.1",
+  "devDependencies": {
+    "@biomejs/biome": "1.6.2",
+    "@cloudflare/workers-types": "^4.20230115.0",
+    "better-sqlite3": "^9.4.3",
+    "drizzle-orm": "^0.30.2",
+    "esbuild": "^0.20.2",
+    "typescript": "^4.9.5",
+    "vitest": "^0.28.3",
+    "wrangler": "2.9.0"
+  },
+  "scripts": {
+    "test": "vitest --reporter verbose",
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=neutral --target=es2019 --format=esm && tsc --emitDeclarationOnly"
+  },
+  "description": "Lightweight rate limiting for Web APIs — compatible with Node.js, Cloudflare Workers, browsers, etc...",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuizto/bite-limiter.git"
+  },
+  "keywords": [
+    "rate limit",
+    "rate limiter",
+    "rate limiting",
+    "cloudflare",
+    "node",
+    "sveltekit",
+    "hono"
+  ],
+  "bugs": {
+    "url": "https://github.com/kuizto/bite-limiter/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

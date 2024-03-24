@@ -1,0 +1,32 @@
+{
+    // https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#adcf93",
+        "activityBar.background": "#adcf93",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#658aba",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#adcf93",
+        "statusBar.background": "#92bf70",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#77ae4e",
+        "statusBarItem.remoteBackground": "#92bf70",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#92bf70",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#92bf7099",
+        "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#92bf70",
+
+    // https://marketplace.visualstudio.com/items?itemName=biomejs.biome
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "quickfix.biome": "explicit"
+        }
+    }
+}

@@ -1,0 +1,31 @@
+.DS_Store
+node_modules/
+*/**/node_modules/
+
+# Source files
+src/
+tests/
+
+# Config files
+tsconfig.json
+biome.json
+
+# Package cache files
+package-*.json
+pnpm-*.yaml
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+.github
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
