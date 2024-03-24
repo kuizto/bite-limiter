@@ -8,7 +8,7 @@ Lightweight rate limiting for Web APIs — compatible with Node.js, Cloudflare W
 
 - Existing rate limiting solutions often lead to vendor lock-in or are limited to Node.js runtimes.
 - We wanted a simple and agnostic rate limiter, usable with Web API runtimes.
-- Implementing rate limiting should be uncomplicated, so developers can protect their APIs with minimal setup.
+- Implementing rate limiting should be uncomplicated, so devs can protect their apps with minimal setup.
 - Built for [kuizto.co](https://kuizto.co/?utm_source=bite-limiter&utm_medium=github), designed for our stack, including Cloudflare Workers, SvelteKit, and Hono.
 
 ## Installation
