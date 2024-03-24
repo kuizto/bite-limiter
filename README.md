@@ -42,21 +42,21 @@ if (!ok) {
 
 | Status | Name | Description | Environment |
 | --- | :--- | :--- | --- |
-| ⚠️ | `RedisStore` | Use Redis immediate consistency for rate limiting via REST API, suitable for all distributed environments (Upstash Redis compatible). | All |
+| ⚠️ | `UpstashRedisStore` | Use Upstash Redis immediate consistency for rate limiting via REST API, suitable for all distributed environments. | All |
 | ⚠️ | `DatabaseStore` | Use any Database to enforce rate limiting through Hook functions, ideal for distributed systems and adaptable to various databases and ORMs. | All |
 | ⚠️ | `CloudflareDurableStore`| Use Cloudflare Durable Objects for strong consistency and isolation, ideal for stateful rate limiting at the edge. | CF Workers only |
 
 ✅ Ready to use.
 ⚠️ Work in progress.
 
-## Example: SvelteKit + Redis Store
+## Example: SvelteKit + Upstash Redis Store
 
 ```ts
 // src/lib/rateLimiter.ts
 const ratelimiter = new BiteLimiter({ 
   windowMs: 60 * 1000, // 1 minute
   limit: 1000, // Limit to 1,000 req per `window`
-  store: new RedisStore('https://redis-endpoint.com')
+  store: new UpstashRedisStore({ url, token })
 })
 
 // src/hooks.server.ts

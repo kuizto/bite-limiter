@@ -1,13 +1,16 @@
 import { describe, expect, it, beforeAll } from 'vitest'
-import { BiteLimiter, RedisStore } from '../src/'
+import { BiteLimiter, UpstashRedisStore } from '../src/'
 
-describe('BiteLimiter + RedisStore', () => {
+describe('BiteLimiter + UpstashRedisStore', () => {
 	let limiter: BiteLimiter
 
 	beforeAll(async () => {
 		limiter = new BiteLimiter({
 			limit: 10, // 10 req per sec
-			store: new RedisStore(String(process.env.REDIS_ENDPOINT))
+			store: new UpstashRedisStore({
+				url: String(process.env.REDIS_ENDPOINT),
+				token: String(process.env.REDIS_TOKEN)
+			})
 		})
 	})
 

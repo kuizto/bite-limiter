@@ -1,5 +1,5 @@
 import { BiteLimiter, type BiteLimiterStore } from './limiter'
-export { RedisStore } from './stores/RedisStore'
+export { UpstashRedisStore } from './stores/UpstashRedisStore'
 export {
 	CloudflareDurableStore,
 	BiteLimiterDurableObject
