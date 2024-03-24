@@ -70,7 +70,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 }
 ```
 
-## Example: Hono + CF Durable Objects Store
+## Example: Hono + Cloudflare Durable Store
 
 ```toml
 [[durable_objects.bindings]]
