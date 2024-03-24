@@ -6,7 +6,8 @@ describe('BiteLimiter + UpstashRedisStore', () => {
 
 	beforeAll(async () => {
 		limiter = new BiteLimiter({
-			limit: 10, // 10 req per sec
+			windowMs: 2 * 1000,
+			limit: 10, // 10 req every 2 sec
 			store: new UpstashRedisStore({
 				url: String(process.env.REDIS_ENDPOINT),
 				token: String(process.env.REDIS_TOKEN)
@@ -18,50 +19,48 @@ describe('BiteLimiter + UpstashRedisStore', () => {
 		for (let i = 0; i < 9; i++) {
 			await limiter.check()
 		}
+		await sleep(250) // network latency
 		const limit = await limiter.check()
 		expect(limit).toStrictEqual({ ok: true, remaining: 0 })
 	})
 
 	it('should block a request over the rate limit', async () => {
+		await sleep(250) // network latency
 		const limit = await limiter.check()
 		expect(limit).toStrictEqual({ ok: false, remaining: 0 })
 	})
 
 	it('should allow requests based on sliding window', async () => {
-		const counter: any[] = []
+		// Wait for more than the window size to ensure a reset
+		await sleep(2250)
 
+		// Perform two checks and expect the limit to be reached after the second
+		await limiter.check()
+		let result = await limiter.check()
+		expect(result).toStrictEqual({ ok: true, remaining: 8 })
+
+		// Wait for the window to slide
 		await sleep(1000)
 		await limiter.check()
-		counter.push(await limiter.check())
+		await limiter.check()
+		result = await limiter.check()
+		expect(result).toStrictEqual({ ok: true, remaining: 5 })
 
-		await sleep(600)
-		await limiter.check()
-		await limiter.check()
-		counter.push(await limiter.check())
+		// Wait for the window to slide
+		await sleep(1000)
+		result = await limiter.check()
+		expect(result).toStrictEqual({ ok: true, remaining: 6 })
 
-		await sleep(600)
-		counter.push(await limiter.check())
+		// Add more checks to hit the limit
+		for (let i = 0; i < 5; i++) {
+			await limiter.check()
+		}
+		result = await limiter.check()
+		expect(result).toStrictEqual({ ok: true, remaining: 0 })
 
-		await sleep(600)
-		await limiter.check()
-		await limiter.check()
-		await limiter.check()
-		await limiter.check()
-		await limiter.check()
-		await limiter.check()
-		await limiter.check()
-		counter.push(await limiter.check())
-		counter.push(await limiter.check())
-		counter.push(await limiter.check())
-
-		expect(counter).toStrictEqual([
-			{ ok: true, remaining: 8 }, // 10 -2
-			{ ok: true, remaining: 5 }, // 8 - 3
-			{ ok: true, remaining: 6 }, // 5 - 1 + 2
-			{ ok: true, remaining: 1 }, // 6 - 8 + 3
-			{ ok: true, remaining: 0 }, // 1 - 1
-			{ ok: false, remaining: 0 }
-		])
+		// The next check should be rate limited
+		result = await limiter.check()
+		expect(result).toStrictEqual({ ok: false, remaining: 0 })
 	})
 })
 

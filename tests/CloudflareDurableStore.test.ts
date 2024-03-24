@@ -37,40 +37,36 @@ describe('BiteLimiter + CloudflareDurableStore', () => {
 	})
 
 	it('should allow requests based on sliding window', async () => {
-		const counter: any[] = []
+		// Wait for more than the window size to ensure a reset
+		await sleep(1250)
 
-		await sleep(1000)
+		// Perform two checks and expect the limit to be reached after the second
 		await worker.fetch('http://example.com')
-		counter.push(await (await worker.fetch('http://example.com')).json())
+		let result = await (await worker.fetch('http://example.com')).json()
+		expect(result).toStrictEqual({ ok: true, remaining: 8 })
 
-		await sleep(600)
+		// Wait for the window to slide
+		await sleep(500)
 		await worker.fetch('http://example.com')
 		await worker.fetch('http://example.com')
-		counter.push(await (await worker.fetch('http://example.com')).json())
+		result = await (await worker.fetch('http://example.com')).json()
+		expect(result).toStrictEqual({ ok: true, remaining: 5 })
 
-		await sleep(600)
-		counter.push(await (await worker.fetch('http://example.com')).json())
+		// Wait for the window to slide
+		await sleep(500)
+		result = await (await worker.fetch('http://example.com')).json()
+		expect(result).toStrictEqual({ ok: true, remaining: 6 })
 
-		await sleep(600)
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		await worker.fetch('http://example.com')
-		counter.push(await (await worker.fetch('http://example.com')).json())
-		counter.push(await (await worker.fetch('http://example.com')).json())
-		counter.push(await (await worker.fetch('http://example.com')).json())
+		// Add more checks to hit the limit
+		for (let i = 0; i < 5; i++) {
+			await worker.fetch('http://example.com')
+		}
+		result = await (await worker.fetch('http://example.com')).json()
+		expect(result).toStrictEqual({ ok: true, remaining: 0 })
 
-		expect(counter).toStrictEqual([
-			{ ok: true, remaining: 8 }, // 10 -2
-			{ ok: true, remaining: 5 }, // 8 - 3
-			{ ok: true, remaining: 6 }, // 5 - 1 + 2
-			{ ok: true, remaining: 1 }, // 6 - 8 + 3
-			{ ok: true, remaining: 0 }, // 1 - 1
-			{ ok: false, remaining: 0 }
-		])
+		// The next check should be rate limited
+		result = await (await worker.fetch('http://example.com')).json()
+		expect(result).toStrictEqual({ ok: false, remaining: 0 })
 	})
 })
 

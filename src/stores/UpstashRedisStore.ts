@@ -51,7 +51,7 @@ export class UpstashRedisStore implements BiteLimiterStore {
 			`/zcount/${encodeURIComponent(key)}/${startWindowScore}/${now}`
 		)
 
-		return (countResult as any).result
+		return Number((countResult as any).result)
 	}
 
 	public async reset(key: string): Promise<void> {
