@@ -2,7 +2,7 @@
 
 **⚠️ Work in progress, not published yet ⚠️**
 
-Lightweight rate limiting for Web APIs — compatible with Node.js, Cloudflare Workers, browsers, etc...
+Universal, lightweight rate limit library for Node.js, Cloudflare Workers, browsers, and more.
 
 ## Why?
 
@@ -64,7 +64,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname.startsWith('/custom')) {
     return new Response('custom response')
   }
-  const limit = ratelimiter.check(userId)
+  const limit = await ratelimiter.check(userId)
   if (!limit.ok) error(429);
   return await resolve(event)
 }
@@ -91,7 +91,7 @@ const ratelimiter = new BiteLimiter({
 // hono middleware
 const rateLimitMiddleware: MiddlewareHandler = async (c, next) => {x
   const userId = c.req.param('userId')
-  const limit = ratelimiter.check(userId)
+  const limit = await ratelimiter.check(userId)
   if (!limit.ok) {
     return c.text('too many requests', 429)
   }
@@ -148,7 +148,6 @@ const ratelimiter = new BiteLimiter({
 // main handler
 export async function handler(event) {
   const limit = await ratelimiter.check()
-
   if (!limit.ok) {
     return {
       statusCode: 429,
@@ -156,7 +155,6 @@ export async function handler(event) {
       body: JSON.stringify(limit),
     }
   }
-
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
